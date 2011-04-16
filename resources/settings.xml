@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+  <category label="General">
+  <setting id="num" type="enum" label="30005" values="25|50|75|100" default="0"/>
+  <setting type="sep" />
+  <setting id="nzb_su_id" type="number" label="30021" default="" />
+  <setting id="nzb_su_key" type="text" label="30022" default=""/>
+  <setting id="nzb_su_hide_xxx" type="bool" label="30023" default="true"/>
+  </category>
+</settings>
