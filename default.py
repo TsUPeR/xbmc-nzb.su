@@ -26,6 +26,8 @@
 import urllib
 import urllib2
 
+import re
+
 import xbmcaddon
 import xbmcgui
 import xbmcplugin
@@ -111,13 +113,14 @@ def list_feed_nzb_su(feedUrl):
     doc = load_xml(feedUrl)
     for item in doc.getElementsByTagName("item"):
         title = get_node_value(item, "title")
-        description = get_node_value(item, "description")
+        description = re.sub('<[^<]+?>', '', get_node_value(item, "description"))
         nzb = get_node_value(item, "link")
-        thumbid = item.getElementsByTagNameNS(NS_NEWZNAB, "imdb")
         thumb = ""
-        if thumbid:
-            thumbid = get_node_value(item, "imdb", NS_NEWZNAB)
-            thumb = "http://nzb.su/covers/movies/" + thumbid + "-cover.jpg"
+        for attribute in item.getElementsByTagName("newznab:attr"):
+            name = attribute.getAttribute("name")
+            if name == "imdb":
+                thumbid = attribute.getAttribute("value")
+                thumb = "http://nzb.su/covers/movies/" + thumbid + "-cover.jpg"
         nzb = "&nzb=" + urllib.quote_plus(nzb) + "&nzbname=" + urllib.quote_plus(title)
         mode = MODE_LIST
         addPosts(title, nzb, mode, description, thumb)
