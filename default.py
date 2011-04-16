@@ -199,6 +199,14 @@ def unikeyboard(default, message):
 if (__name__ == "__main__" ):
     if not (__settings__.getSetting("firstrun") and __settings__.getSetting("nzb_su_id")
         and __settings__.getSetting("nzb_su_key")):
+        # Try import from nzbs
+        try:
+            __nzbs_settings__ = xbmcaddon.Addon(id='plugin.video.nzbs')
+            __settings__.setSetting("nzb_su_id", __nzbs_settings__.getSetting("nzb_su_id"))
+            __settings__.setSetting("nzb_su_key", __nzbs_settings__.getSetting("nzb_su_key"))
+        except:
+            # DEBUG
+            print "plugin.video.nzbsu - nothing to import from plugin.video.nzbs"
         __settings__.openSettings()
         __settings__.setSetting("firstrun", '1')
     if (not sys.argv[2]):
