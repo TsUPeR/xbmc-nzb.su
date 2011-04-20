@@ -49,6 +49,14 @@ MODE_DOWNLOAD = "download"
 MODE_INCOMPLETE = "incomplete"
            
 # ---NZB.SU---
+# <li>Rating: 5.8</li>
+RE_RATING = ">Rating: (.*?)</"
+RE_PLOT = ">Plot: (.*?)</"
+RE_YEAR = ">Year: (.*?)</"
+RE_GENRE = ">Genre: (.*?)</"
+RE_DIRECTOR = ">Director: (.*?)</"
+RE_ACTORS = ">Actors: (.*?)</"
+
 MODE_NZB_SU = "nzb.su"
 MODE_NZB_SU_SEARCH = "nzb.su&nzb.su=search"
 MODE_NZB_SU_MY = "nzb.su&nzb.su=mycart"
@@ -95,7 +103,7 @@ def nzb_su(params):
             elif catid:
                 url = NZB_SU_URL + "&t=" + catid
                 key = "&catid=" + catid
-                addPosts('Search...', key, MODE_NZB_SU_SEARCH, '', '')
+                addPosts('Search...', key, MODE_NZB_SU_SEARCH)
             list_feed_nzb_su(url)
         else:
             # if not catid:
@@ -104,16 +112,46 @@ def nzb_su(params):
                 if ("XXX" in name) and (__settings__.getSetting("nzb_su_hide_xxx").lower() == "true"):
                  break
                 key = "&catid=" + str(catid)
-                addPosts(name, key, MODE_NZB_SU, '', '')
+                addPosts(name, key, MODE_NZB_SU)
             # TODO add settings toggle
-            addPosts("My Cart", '', MODE_NZB_SU_MY, '', '')
+            addPosts("My Cart", '', MODE_NZB_SU_MY)
     return
 
 def list_feed_nzb_su(feedUrl):
     doc = load_xml(feedUrl)
     for item in doc.getElementsByTagName("item"):
         title = get_node_value(item, "title")
-        description = re.sub('<[^<]+?>', '', get_node_value(item, "description"))
+        description = get_node_value(item, "description")
+        rating = re.search(RE_RATING, description, re.IGNORECASE|re.DOTALL)
+        if rating:
+            rating = float(rating.group(1))
+        else:
+            rating = 0
+        plot = re.search(RE_PLOT, description, re.IGNORECASE|re.DOTALL)
+        if plot:
+            plot = plot.group(1)
+        else:
+            plot = ""
+        year = re.search(RE_YEAR, description, re.IGNORECASE|re.DOTALL)
+        if year:
+            year = int(year.group(1))
+        else:
+            year = 0
+        genre = re.search(RE_GENRE, description, re.IGNORECASE|re.DOTALL)
+        if genre:
+            genre = genre.group(1)
+        else:
+            genre = ""
+        director = re.search(RE_DIRECTOR, description, re.IGNORECASE|re.DOTALL)
+        if director:
+            director = director.group(1)
+        else:
+            director = ""
+        actors = re.search(RE_ACTORS, description, re.IGNORECASE|re.DOTALL)
+        if actors:
+            actors = actors.group(1)
+        else:
+            actors = ""
         nzb = get_node_value(item, "link")
         thumb = ""
         for attribute in item.getElementsByTagName("newznab:attr"):
@@ -123,12 +161,13 @@ def list_feed_nzb_su(feedUrl):
                 thumb = "http://nzb.su/covers/movies/" + thumbid + "-cover.jpg"
         nzb = "&nzb=" + urllib.quote_plus(nzb) + "&nzbname=" + urllib.quote_plus(title)
         mode = MODE_LIST
-        addPosts(title, nzb, mode, description, thumb)
+        addPosts(title, nzb, mode, plot, thumb, rating, year, genre, director, actors)
     return
 
-def addPosts(title, url, mode, description='', thumb='', folder=True):
+def addPosts(title, url, mode, description='', thumb='', rating = 0, year = 0, genre = '', director = '', actors = '', folder=True):
     listitem=xbmcgui.ListItem(title, iconImage="DefaultFolder.png", thumbnailImage=thumb)
-    listitem.setInfo(type="Video", infoLabels={ "Title": title, "Plot" : description })
+    listitem.setInfo(type="Video", infoLabels={ "Title": title, "Plot" : description, "Rating" : rating, "Year" : year, 
+                    "Genre" : genre, "Director" : director, "Actors" : actors})
     if mode == MODE_LIST:
         cm = []
         cm_mode = MODE_DOWNLOAD
