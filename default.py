@@ -92,6 +92,7 @@ def nzb_su(params):
             get = params.get
             catid = get("catid")
             nzb_su = get("nzb.su")
+            url = None
             if nzb_su:
                 if nzb_su == "mycart":
                     url = NZB_SU_URL + "&t=-2"
@@ -104,7 +105,8 @@ def nzb_su(params):
                 url = NZB_SU_URL + "&t=" + catid
                 key = "&catid=" + catid
                 addPosts('Search...', key, MODE_NZB_SU_SEARCH)
-            list_feed_nzb_su(url)
+            if url:
+                list_feed_nzb_su(url)
         else:
             # if not catid:
             # Build Main menu
@@ -220,7 +222,7 @@ def load_xml(url):
 def search(dialog_name):
     searchString = unikeyboard('', '' )
     if searchString == "":
-        xbmcgui.Dialog().ok('Missing text')
+        xbmcgui.Dialog().ok('Nzb.su','Missing text')
     elif searchString:
         # latestSearch = __settings__.setSetting( "latestSearch", searchString )
         dialogProgress = xbmcgui.DialogProgress()
@@ -236,7 +238,7 @@ def unikeyboard(default, message):
     if (keyboard.isConfirmed()):
         return keyboard.getText()
     else:
-        return None
+        return ""
 
 if (__name__ == "__main__" ):
     if not (__settings__.getSetting("firstrun") and __settings__.getSetting("nzb_su_id")
