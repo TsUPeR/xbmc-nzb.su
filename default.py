@@ -49,7 +49,6 @@ MODE_DOWNLOAD = "download"
 MODE_INCOMPLETE = "incomplete"
            
 # ---NZB.SU---
-# <li>Rating: 5.8</li>
 RE_RATING = ">Rating: (.*?)</"
 RE_PLOT = ">Plot: (.*?)</"
 RE_YEAR = ">Year: (.*?)</"
@@ -220,11 +219,11 @@ def load_xml(url):
     return parseString(xml)
 
 def search(dialog_name):
-    searchString = unikeyboard('', '' )
+    searchString = unikeyboard(__settings__.getSetting( "latestSearch" ), 'Search Nzb.su' )
     if searchString == "":
         xbmcgui.Dialog().ok('Nzb.su','Missing text')
     elif searchString:
-        # latestSearch = __settings__.setSetting( "latestSearch", searchString )
+        latestSearch = __settings__.setSetting( "latestSearch", searchString )
         dialogProgress = xbmcgui.DialogProgress()
         dialogProgress.create(dialog_name, 'Searching for: ' , searchString)
         #The XBMC onscreen keyboard outputs utf-8 and this need to be encoded to unicode
