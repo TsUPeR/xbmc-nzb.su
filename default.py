@@ -173,7 +173,7 @@ def addPosts(title, url, mode, description='', thumb='', rating = 0, year = 0, g
         cm = []
         cm_mode = MODE_DOWNLOAD
         cm_label = "Download"
-        if (__settings__.getSetting("auto_play").lower() == "true"):
+        if (xbmcaddon.Addon(id='plugin.video.nzbs').getSetting("auto_play").lower() == "true"):
             folder = False
         cm_url_download = NZBS_URL + '?mode=' + cm_mode + url
         cm.append((cm_label , "XBMC.RunPlugin(%s)" % (cm_url_download)))
