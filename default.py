@@ -163,7 +163,7 @@ def list_feed_nzb_su(feedUrl):
         nzb = "&nzb=" + urllib.quote_plus(nzb) + "&nzbname=" + urllib.quote_plus(title)
         mode = MODE_LIST
         addPosts(title, nzb, mode, plot, thumb, rating, year, genre, director, actors)
-        xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+    xbmcplugin.setContent(int(sys.argv[1]), 'movies')
     return
 
 def addPosts(title, url, mode, description='', thumb='', rating = 0, year = 0, genre = '', director = '', actors = '', folder=True):
