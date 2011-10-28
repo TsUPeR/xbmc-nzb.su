@@ -49,7 +49,7 @@ MODE_DOWNLOAD = "download"
 MODE_INCOMPLETE = "incomplete"
            
 # ---NZB.SU---
-RE_RATING = ">Rating: (.*?)</"
+RE_RATING = ">Rating: <.*?>(.*?)</"
 RE_PLOT = ">Plot: (.*?)</"
 RE_YEAR = ">Year: (.*?)</"
 RE_GENRE = ">Genre: (.*?)</"
