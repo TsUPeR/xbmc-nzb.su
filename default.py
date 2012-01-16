@@ -204,9 +204,9 @@ def getParameters(parameterString):
 
 def get_node_value(parent, name, ns=""):
     if ns:
-        return parent.getElementsByTagNameNS(ns, name)[0].childNodes[0].data
+        return parent.getElementsByTagNameNS(ns, name)[0].childNodes[0].data.encode('utf-8')
     else:
-        return parent.getElementsByTagName(name)[0].childNodes[0].data
+        return parent.getElementsByTagName(name)[0].childNodes[0].data.encode('utf-8')
 
 def load_xml(url):
     try:
